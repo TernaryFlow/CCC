@@ -1,22 +1,25 @@
-```gitignore
+```
 # Build artifacts
 bin/
 obj/
-*.dll
-*.exe
-*.pdb
-*.nupkg
+out/
+dist/
+build/
+target/
 
 # Dependencies
 packages/
 node_modules/
+vendor/
 
 # IDE files
 .vs/
 .idea/
 *.userprefs
-*.suo
 *.user
+*.suo
+*.userosscache
+*.sln.docstates
 
 # Logs
 *.log
@@ -29,4 +32,35 @@ node_modules/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# Debug files
+*.ilk
+*.pdb
+*.exp
+*.lib
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Compressed archives
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.gz
+*.rar
+*.7z
 ```
