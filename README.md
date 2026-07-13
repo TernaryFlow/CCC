@@ -90,30 +90,18 @@ csw publish worker
 - ✅ Generics
 - ✅ Object/collection initializers
 
-### Cloudflare Bindings
-- ✅ KV Storage
-- ✅ R2 Buckets
-- ✅ D1 Database
-- ✅ Durable Objects
-- ✅ Queues
-- ✅ Cache API
-- ✅ AI Binding
-- ✅ Workers Analytics
+### Advanced Features (v2+)
+- 🔄 Reflection (limited, compile-time only)
+- 🔄 Dynamic (via dynamic dispatch helpers)
+- 🔄 Expression Trees (partial, lambda analysis)
+- 🔄 Unsafe code (simulated with ArrayBuffer)
+- 🔄 P/Invoke (JavaScript interop bridge)
+- 🔄 Threading (Web Workers integration)
+- 🔄 AppDomain (simulated isolation)
+- 🔄 Marshal (memory simulation)
+- 🔄 COM (JavaScript object interop)
 
-## Unsupported Features (v1)
-
-These features are intentionally not supported in v1:
-- ❌ Reflection
-- ❌ Dynamic
-- ❌ Expression Trees
-- ❌ Unsafe code
-- ❌ P/Invoke
-- ❌ Threading (beyond async/await)
-- ❌ AppDomain
-- ❌ Marshal
-- ❌ COM
-
-Extension points are designed for future implementation.
+> Note: Advanced features have runtime overhead and should be used judiciously. See [Advanced Features Guide](docs/advanced-features.md) for details.
 
 ## CLI Commands
 
@@ -122,7 +110,18 @@ csw compile <file|project>    # Compile C# to JavaScript
 csw watch                      # Watch mode for development
 csw publish <worker-name>      # Deploy to Cloudflare
 csw bundle                     # Generate bundled output
+csw new <template>             # Create new worker from template
 ```
+
+## Cloudflare Bindings
+- ✅ KV Storage
+- ✅ R2 Buckets
+- ✅ D1 Database
+- ✅ Durable Objects
+- ✅ Queues
+- ✅ Cache API
+- ✅ AI Binding
+- ✅ Workers Analytics
 
 ## Runtime
 
@@ -136,6 +135,23 @@ The runtime provides essential .NET-like APIs:
 - JSON serialization
 
 Total runtime size: <100KB minified.
+
+## Samples
+
+Explore the `Samples/` directory for complete examples:
+
+| Sample | Description | Features Used |
+|--------|-------------|---------------|
+| `ExampleWorker.cs` | Basic HTTP worker | Request/Response, async/await |
+| `LinqWorker.cs` | LINQ operations | LINQ, collections, lambdas |
+| `KvStorageWorker.cs` | KV storage operations | KV binding, async patterns |
+| `D1DatabaseWorker.cs` | Database queries | D1 binding, parameterized queries |
+| `ReflectionSample.cs` | Reflection usage | Type inspection, dynamic dispatch |
+| `ThreadingSample.cs` | Web Workers threading | Task.Run, parallel operations |
+| `UnsafeSample.cs` | Unsafe code simulation | ArrayBuffer, pointer-like ops |
+| `AdvancedFeaturesSample.cs` | All advanced features | Reflection, dynamic, expressions |
+
+See [Samples README](Samples/README.md) for detailed instructions.
 
 ## Documentation
 

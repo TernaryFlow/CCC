@@ -1,66 +1,95 @@
 ```
 # Build artifacts
-bin/
-obj/
-out/
-dist/
-build/
-target/
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.o
+*.out
 
 # Dependencies
 packages/
-node_modules/
-vendor/
-
-# IDE files
-.vs/
-.idea/
-*.userprefs
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
+lib/
+bin/
+obj/
 
 # Logs
 *.log
+
+# Temp files
+*.tmp
+*.temp
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# OS generated files
+# Editors
+.vs/
+.vim/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Temporary files
-*.tmp
-*.temp
-*.bak
-
-# Coverage reports
+# Coverage
 coverage/
 htmlcov/
-*.coverage
+.coverage
 
-# Debug files
-*.ilk
-*.pdb
-*.exp
-*.lib
+# Python specific (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage.*
+.nox/
+.pytest_cache/
+.mypy_cache/
 
-# Compiled binaries
-*.exe
-*.dll
-*.so
-*.dylib
+# Node.js specific (if applicable)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
+.nyc_output
+coverage/
+.npm
+.package-lock.json
+.eslintcache
+.prettiercache
 
-# Compressed archives
-*.zip
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.gz
-*.rar
-*.7z
+# Java specific (if applicable)
+*.class
+*.jar
+*.war
+*.ear
+target/
+.gradle/
+build/
+!src/main/**
+!src/test/**
+
+# C# specific (if applicable)
+bin/
+obj/
+*.sln.cache
+*.user
+*.userosscache
+*.suo
+.vs/
 ```
