@@ -40,9 +40,10 @@ ES2025 Modules + Runtime (Compiler.Runtime)
 | `Compiler.IR` | Intermediate representation definitions |
 | `Compiler.CodeGen` | JavaScript code generation |
 | `Compiler.Runtime` | Lightweight JavaScript runtime (<100KB) |
+| `Compiler.EFCore.Shim` | EF Core compatibility layer for D1 (NEW) |
 | `Compiler.CLI` | Command-line interface |
 | `Compiler.SDK` | Developer SDK for Workers |
-| `Samples` | Example projects |
+| `Samples` | Example projects including full E-Commerce store |
 | `Tests` | Unit, integration, and snapshot tests |
 
 ## Installation
@@ -140,18 +141,29 @@ Total runtime size: <100KB minified.
 
 Explore the `Samples/` directory for complete examples:
 
+### Basic Samples
 | Sample | Description | Features Used |
 |--------|-------------|---------------|
 | `ExampleWorker.cs` | Basic HTTP worker | Request/Response, async/await |
 | `LinqWorker.cs` | LINQ operations | LINQ, collections, lambdas |
 | `KvStorageWorker.cs` | KV storage operations | KV binding, async patterns |
 | `D1DatabaseWorker.cs` | Database queries | D1 binding, parameterized queries |
+
+### Advanced Samples
+| Sample | Description | Features Used |
+|--------|-------------|---------------|
 | `ReflectionSample.cs` | Reflection usage | Type inspection, dynamic dispatch |
 | `ThreadingSample.cs` | Web Workers threading | Task.Run, parallel operations |
 | `UnsafeSample.cs` | Unsafe code simulation | ArrayBuffer, pointer-like ops |
 | `AdvancedFeaturesSample.cs` | All advanced features | Reflection, dynamic, expressions |
 
-See [Samples README](Samples/README.md) for detailed instructions.
+### Enterprise Samples (EF Core Compatible)
+| Sample | Description | Features Used |
+|--------|-------------|---------------|
+| `ECommerceEFCore.cs` | Full e-commerce store | EF Core Shim, LINQ, D1, Transactions |
+| `ECommerceStore.cs` | Alternative store impl | Direct D1 API, custom DAL |
+
+See [Samples README](Samples/README.md) and [Migration Guide](docs/migration-guide.md) for detailed instructions.
 
 ## Documentation
 
@@ -159,6 +171,9 @@ See [Samples README](Samples/README.md) for detailed instructions.
 - [Compilation Pipeline](docs/pipeline.md)
 - [Extensibility Model](docs/extensibility.md)
 - [API Reference](docs/api.md)
+- [Advanced Features Guide](docs/advanced-features.md)
+- **[Migration Guide: EF Core to Cloudflare](docs/migration-guide.md)** - How to migrate .NET + EF Core + SQL Server projects
+- [Implementation Roadmap](docs/roadmap.md)
 
 ## License
 

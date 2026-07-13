@@ -1,17 +1,45 @@
 ```
-# Dependencies
-packages/
 # Build artifacts
 bin/
 obj/
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+*.jar
+*.war
+*.class
+
+# Dependencies
+packages/
+node_modules/
+.nuget/
+.nyc_output/
+coverage/
+
+# IDE files
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
 # Environment
 .env
 .env.local
 *.env.*
-# Editors
-.vscode/
-.idea/
-# OS
+
+# OS generated files
 .DS_Store
 Thumbs.db
+
+# Test and coverage
+coverage/
+htmlcov/
+.coverage
+*.cover
 ```
