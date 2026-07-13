@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Diagnostics;
 using CSharpWorkers.Core;
 using CSharpWorkers.Parser;
 
@@ -98,10 +99,10 @@ public class Program
         {
             var options = new CompilationOptions(
                 OutputPath: output,
-                Minify = minify,
-                SourceMaps = sourceMaps,
-                TreeShaking = optimize,
-                Optimize = optimize
+                Minify: minify,
+                SourceMaps: sourceMaps,
+                TreeShaking: optimize,
+                Optimize: optimize
             );
 
             var parser = new CSharpParser(options);

@@ -24,7 +24,7 @@ public class CSharpParser
     /// </summary>
     public ParsedCompilation Parse(string source, string filePath = "<source>")
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.CSharp12));
+        var syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.CSharp12), filePath);
         
         var references = AppDomain.CurrentDomain.GetAssemblies()
             .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location))
@@ -42,7 +42,7 @@ public class CSharpParser
         var diagnostics = GetDiagnostics(compilation);
 
         return new ParsedCompilation(
-            syntaxTree,
+            syntaxTree.GetRoot(),
             semanticModel,
             diagnostics,
             filePath
@@ -55,13 +55,12 @@ public class CSharpParser
     public ParsedCompilation ParseFiles(IEnumerable<(string Path, string Content)> files)
     {
         var syntaxTrees = new List<SyntaxTree>();
-        var fileMap = new Dictionary<string, string>();
+        var fileList = files.ToList();
 
-        foreach (var (path, content) in files)
+        foreach (var (path, content) in fileList)
         {
-            var tree = CSharpSyntaxTree.ParseText(content, new CSharpParseOptions(LanguageVersion.CSharp12));
+            var tree = CSharpSyntaxTree.ParseText(content, new CSharpParseOptions(LanguageVersion.CSharp12), path);
             syntaxTrees.Add(tree);
-            fileMap[tree.FilePath] = path;
         }
 
         var references = AppDomain.CurrentDomain.GetAssemblies()
@@ -77,21 +76,22 @@ public class CSharpParser
         );
 
         var diagnostics = GetDiagnostics(compilation);
+        var firstTree = syntaxTrees.FirstOrDefault();
 
         return new ParsedCompilation(
-            syntaxTrees.FirstOrDefault()?.GetRoot(),
-            compilation,
+            firstTree?.GetRoot(),
+            firstTree != null ? compilation.GetSemanticModel(firstTree) : null!,
             diagnostics,
-            fileMap
+            firstTree?.FilePath ?? "<source>"
         );
     }
 
-    private static IReadOnlyList<Microsoft.CodeAnalysis.Diagnostic> GetDiagnostics(CSharpCompilation compilation)
+    private static IReadOnlyList<CoreDiagnostic> GetDiagnostics(CSharpCompilation compilation)
     {
         return compilation.GetDiagnostics()
             .Where(d => d.Severity == DiagnosticSeverity.Error || d.Severity == DiagnosticSeverity.Warning)
             .Select(d => new CoreDiagnostic(
-                (CoreDiagnosticSeverity)(int)d.Severity,
+                MapSeverity(d.Severity),
                 d.Id,
                 d.GetMessage(),
                 d.Location.IsInSource ? new CoreSourceLocation(
@@ -101,6 +101,16 @@ public class CSharpParser
                 ) : null
             ))
             .ToList();
+    }
+
+    private static CoreDiagnosticSeverity MapSeverity(DiagnosticSeverity severity)
+    {
+        return severity switch
+        {
+            DiagnosticSeverity.Error => CoreDiagnosticSeverity.Error,
+            DiagnosticSeverity.Warning => CoreDiagnosticSeverity.Warning,
+            _ => CoreDiagnosticSeverity.Info
+        };
     }
 }
 

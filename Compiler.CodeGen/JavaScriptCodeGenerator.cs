@@ -232,7 +232,7 @@ public class JavaScriptCodeGenerator
     private void GenerateEnum(ClassDeclaration enumDecl)
     {
         var enumName = EscapeIdentifier(enumDecl.Name);
-        WriteLine(`export const ${enumName} = {`);
+        WriteLine($"export const {enumName} = {{");
         Indent();
 
         var members = enumDecl.Fields.Select(f => f.Name).ToList();
@@ -245,7 +245,7 @@ public class JavaScriptCodeGenerator
         Dedent();
         WriteLine("};");
         WriteLine();
-        WriteLine(`Object.freeze(${enumName});`);
+        WriteLine($"Object.freeze({enumName});");
     }
 
     private void GenerateBlock(BlockStatement block)
@@ -303,10 +303,10 @@ public class JavaScriptCodeGenerator
                 if (forStmt.Initializer != null)
                 {
                     var initType = GetJavaScriptType(forStmt.Initializer.Type);
-                    var initValue = forStmt.Initializer.Initializer != null 
+                    var forInitValue = forStmt.Initializer.Initializer != null 
                         ? GenerateExpression(forStmt.Initializer.Initializer) 
                         : "undefined";
-                    Write($"let {EscapeIdentifier(forStmt.Initializer.Name)} = {initValue}; ");
+                    Write($"let {EscapeIdentifier(forStmt.Initializer.Name)} = {forInitValue}; ");
                 }
                 Write("; ");
                 if (forStmt.Condition != null)
@@ -367,7 +367,7 @@ public class JavaScriptCodeGenerator
                 break;
 
             default:
-                WriteLine(`// TODO: Generate statement {stmt.GetType().Name}`);
+                WriteLine($"// TODO: Generate statement {stmt.GetType().Name}");
                 break;
         }
     }
@@ -391,7 +391,7 @@ public class JavaScriptCodeGenerator
             AwaitExpression awaitExpr => $"await {GenerateExpression(awaitExpr.InnerExpression)}",
             SwitchExpression switchExpr => GenerateSwitch(switchExpr),
             CastExpression cast => GenerateExpression(cast.Expression), // Type casts are erased in JS
-            _ => `/* TODO: {expr.GetType().Name} */ undefined`
+            _ => $"/* TODO: {expr.GetType().Name} */ undefined"
         };
     }
 

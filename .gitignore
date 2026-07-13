@@ -1,1 +1,50 @@
-Nothing should be ignored in this case, as only a source code file (.cs) was modified and there are no build artifacts, dependencies, or temporary files in the changes.
+## .NET build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+## Visual Studio / VS Code / Rider
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.userosscache
+*.sln.docstates
+*.user
+
+## NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+
+## Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+TestResults/
+
+## Build status / temp
+*.tmp
+*.log
+*.cache
+*.pidb
+*.mdb
+*.resources
+*.dll.config
+*.exe.config
+
+## OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+## Publish output
+[Pp]ublish/
+dist/

@@ -17,7 +17,7 @@ public record SourceLocation(string FilePath, int Line, int Column);
 /// <summary>
 /// Base type for all type representations.
 /// </summary>
-public abstract class TypeSymbol
+public class TypeSymbol
 {
     public string Name { get; init; } = "";
     public string Namespace { get; init; } = "";

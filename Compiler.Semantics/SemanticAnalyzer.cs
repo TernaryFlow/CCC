@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using CSharpWorkers.Core;
 using CSharpWorkers.Parser;
 
@@ -125,7 +126,8 @@ public static class SymbolExtensions
             SyntaxKind.FieldDeclaration or
             SyntaxKind.EventDeclaration or
             SyntaxKind.DelegateDeclaration or
-            SyntaxKind.LambdaExpression or
+            SyntaxKind.SimpleLambdaExpression or
+            SyntaxKind.ParenthesizedLambdaExpression or
             SyntaxKind.LocalFunctionStatement or
             SyntaxKind.SwitchExpression or
             SyntaxKind.SwitchStatement or
@@ -139,10 +141,12 @@ public static class SymbolExtensions
             SyntaxKind.AwaitExpression or
             SyntaxKind.InvocationExpression or
             SyntaxKind.ObjectCreationExpression or
-            SyntaxKind.InitializerExpression => true,
+            SyntaxKind.ObjectInitializerExpression or
+            SyntaxKind.CollectionInitializerExpression or
+            SyntaxKind.ArrayInitializerExpression => true,
             
             // Unsupported features
-            SyntaxKind.UnsafeCode or
+            SyntaxKind.UnsafeStatement or
             SyntaxKind.FixedStatement or
             SyntaxKind.PointerType => false,
             

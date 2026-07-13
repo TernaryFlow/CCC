@@ -9,10 +9,6 @@ public abstract class Worker
     /// <summary>
     /// Handles an incoming HTTP request.
     /// </summary>
-    /// <param name="request">The incoming request.</param>
-    /// <param name="env">Environment bindings (KV, R2, D1, etc.).</param>
-    /// <param name="ctx">Execution context for waitUntil and passThroughOnException.</param>
-    /// <returns>A response to send back to the client.</returns>
     public abstract Task<Response> Fetch(Request request, Env env, ExecutionContext ctx);
 }
 
@@ -21,25 +17,18 @@ public abstract class Worker
 /// </summary>
 public class Request
 {
-    private readonly global::Request _inner;
+    public string Url { get; set; } = "";
+    public string Method { get; set; } = "GET";
+    public Headers Headers { get; set; } = new();
+    public CfProperties? Cf { get; set; }
 
-    public Request(string url, RequestInit? init = null)
-    {
-        _inner = new global::Request(url, init);
-    }
+    public Task<string> Text() => Task.FromResult("");
+    public Task<object?> Json() => Task.FromResult<object?>(null);
+    public Task<FormData> FormData() => Task.FromResult(new FormData());
+    public Task<Blob> Blob() => Task.FromResult(new Blob());
+    public Task<byte[]> ArrayBuffer() => Task.FromResult(Array.Empty<byte>());
 
-    public string Url => _inner.url;
-    public string Method => _inner.method;
-    public Headers Headers => new Headers(_inner.headers);
-    public CfProperties? Cf => _inner.cf;
-
-    public Task<string> Text() => _inner.text();
-    public Task<dynamic> Json() => _inner.json();
-    public Task<FormData> FormData() => _inner.formData();
-    public Task<Blob> Blob() => _inner.blob();
-    public Task<ArrayBuffer> ArrayBuffer() => _inner.arrayBuffer();
-
-    public Request Clone() => new Request(_inner.clone());
+    public Request Clone() => new Request();
 }
 
 /// <summary>
@@ -47,42 +36,24 @@ public class Request
 /// </summary>
 public class Response
 {
-    private readonly global::Response _inner;
+    public int Status { get; set; } = 200;
+    public string StatusText { get; set; } = "";
+    public Headers Headers { get; set; } = new();
+    public bool Ok { get; set; } = true;
+    public bool Redirected { get; set; }
+    public string Url { get; set; } = "";
 
-    public Response(object? body = null, ResponseInit? init = null)
-    {
-        _inner = new global::Response(body, init);
-    }
+    public Task<string> Text() => Task.FromResult("");
+    public Task<object?> Json() => Task.FromResult<object?>(null);
+    public Task<FormData> FormData() => Task.FromResult(new FormData());
+    public Task<Blob> Blob() => Task.FromResult(new Blob());
+    public Task<byte[]> ArrayBuffer() => Task.FromResult(Array.Empty<byte>());
 
-    public static Response Json(object data, ResponseInit? init = null)
-    {
-        return new Response(global::Response.json(data, init));
-    }
+    public Response Clone() => new Response();
 
-    public static Response Html(string html, ResponseInit? init = null)
-    {
-        return new Response(global::Response.html(html, init));
-    }
-
-    public static Response Redirect(string url, int status = 302)
-    {
-        return new Response(global::Response.redirect(url, status));
-    }
-
-    public int Status => _inner.status;
-    public string StatusText => _inner.statusText;
-    public Headers Headers => new Headers(_inner.headers);
-    public bool Ok => _inner.ok;
-    public bool Redirected => _inner.redirected;
-    public string Url => _inner.url;
-
-    public Task<string> Text() => _inner.text();
-    public Task<dynamic> Json() => _inner.json();
-    public Task<FormData> FormData() => _inner.formData();
-    public Task<Blob> Blob() => _inner.blob();
-    public Task<ArrayBuffer> ArrayBuffer() => _inner.arrayBuffer();
-
-    public Response Clone() => new Response(_inner.clone());
+    public static Response Json(object data, ResponseInit? init = null) => new Response();
+    public static Response Html(string html, ResponseInit? init = null) => new Response();
+    public static Response Redirect(string url, int status = 302) => new Response();
 }
 
 /// <summary>
@@ -90,19 +61,12 @@ public class Response
 /// </summary>
 public class Env
 {
-    private readonly global::Env _inner;
-
-    public Env(dynamic bindings)
-    {
-        _inner = new global::Env(bindings);
-    }
-
-    public KVNamespace GetKV(string namespaceName) => _inner.getKV(namespaceName);
-    public R2Bucket GetR2(string bucketName) => _inner.getR2(bucketName);
-    public D1Database GetD1(string databaseName) => _inner.getD1(databaseName);
-    public DurableObjectNamespace GetDurableObject(string namespaceName) => _inner.getDurableObject(namespaceName);
-    public WorkerQueue GetQueue(string queueName) => _inner.getQueue(queueName);
-    public AIBinding GetAI(string aiName) => _inner.getAI(aiName);
+    public KVNamespace GetKV(string namespaceName) => new KVNamespace();
+    public R2Bucket GetR2(string bucketName) => new R2Bucket();
+    public D1Database GetD1(string databaseName) => new D1Database();
+    public DurableObjectNamespace GetDurableObject(string namespaceName) => new DurableObjectNamespace();
+    public WorkerQueue GetQueue(string queueName) => new WorkerQueue();
+    public AIBinding GetAI(string aiName) => new AIBinding();
 }
 
 /// <summary>
@@ -110,75 +74,46 @@ public class Env
 /// </summary>
 public class ExecutionContext
 {
-    private readonly global::ExecutionContext _inner;
-
-    public ExecutionContext(global::ExecutionContext inner)
-    {
-        _inner = inner;
-    }
-
-    public void WaitUntil(Task task) => _inner.waitUntil(task);
-    public void PassThroughOnException() => _inner.passThroughOnException();
+    public void WaitUntil(Task task) { }
+    public void PassThroughOnException() { }
 }
+
+// ---- KV Namespace ----
 
 /// <summary>
 /// KV Namespace for key-value storage.
 /// </summary>
 public class KVNamespace
 {
-    private readonly global::KVNamespace _inner;
-
-    public KVNamespace(global::KVNamespace inner)
-    {
-        _inner = inner;
-    }
-
-    public Task<T?> Get<T>(string key, KVGetOptions? options = null) 
-        => _inner.get(key, options);
-
-    public Task Put(string key, object value, KVPutOptions? options = null) 
-        => _inner.put(key, value, options);
-
-    public Task Delete(string key) 
-        => _inner.delete(key);
-
-    public Task<KVListResult> List(KVListOptions? options = null) 
-        => _inner.list(options);
+    public Task<T?> Get<T>(string key, KVGetOptions? options = null) => Task.FromResult<T?>(default);
+    public Task Put(string key, object value, KVPutOptions? options = null) => Task.CompletedTask;
+    public Task Delete(string key) => Task.CompletedTask;
+    public Task<KVListResult> List(KVListOptions? options = null) => Task.FromResult(new KVListResult());
 }
+
+// ---- R2 Object Storage ----
 
 /// <summary>
 /// R2 Bucket for object storage.
 /// </summary>
 public class R2Bucket
 {
-    private readonly global::R2Bucket _inner;
-
-    public R2Bucket(global::R2Bucket inner)
-    {
-        _inner = inner;
-    }
-
-    public Task<R2Object?> Head(string key) => _inner.head(key);
-    public Task<R2ObjectBody?> Get(string key, R2GetOptions? options = null) => _inner.get(key, options);
-    public Task<R2Object> Put(string key, object value, R2PutOptions? options = null) => _inner.put(key, value, options);
-    public Task Delete(string key) => _inner.delete(key);
-    public Task<R2Objects> List(R2ListOptions? options = null) => _inner.list(options);
+    public Task<R2Object?> Head(string key) => Task.FromResult<R2Object?>(null);
+    public Task<R2ObjectBody?> Get(string key, R2GetOptions? options = null) => Task.FromResult<R2ObjectBody?>(null);
+    public Task<R2Object> Put(string key, object value, R2PutOptions? options = null) => Task.FromResult(new R2Object());
+    public Task Delete(string key) => Task.CompletedTask;
+    public Task<R2Objects> List(R2ListOptions? options = null) => Task.FromResult(new R2Objects());
 }
+
+// ---- D1 Database ----
 
 /// <summary>
 /// D1 Database for SQL storage.
 /// </summary>
 public class D1Database
 {
-    private readonly global::D1Database _inner;
-
-    public D1Database(global::D1Database inner)
-    {
-        _inner = inner;
-    }
-
-    public D1PreparedStatement Prepare(string query) => new D1PreparedStatement(_inner.prepare(query));
-    public Task<D1Result> Exec(string query) => _inner.exec(query);
+    public D1PreparedStatement Prepare(string query) => new D1PreparedStatement();
+    public Task<D1Result> Exec(string query) => Task.FromResult(new D1Result());
 }
 
 /// <summary>
@@ -186,40 +121,23 @@ public class D1Database
 /// </summary>
 public class D1PreparedStatement
 {
-    private readonly global::D1PreparedStatement _inner;
-
-    public D1PreparedStatement(global::D1PreparedStatement inner)
-    {
-        _inner = inner;
-    }
-
-    public D1PreparedStatement Bind(params object[] values) 
-        => new D1PreparedStatement(_inner.bind(values));
-
-    public Task<T?> First<T>() => _inner.first<T>();
-    public Task<D1Result> Run() => _inner.run();
-    public Task<D1ResultAll> All() => _inner.all();
+    public D1PreparedStatement Bind(params object[] values) => this;
+    public Task<T?> First<T>() => Task.FromResult<T?>(default);
+    public Task<D1Result> Run() => Task.FromResult(new D1Result());
+    public Task<D1ResultAll> All() => Task.FromResult(new D1ResultAll());
 }
+
+// ---- Durable Objects ----
 
 /// <summary>
 /// Durable Object namespace.
 /// </summary>
 public class DurableObjectNamespace
 {
-    private readonly global::DurableObjectNamespace _inner;
-
-    public DurableObjectNamespace(global::DurableObjectNamespace inner)
-    {
-        _inner = inner;
-    }
-
-    public DurableObjectId NewUniqueId(DurableObjectUniqueidOptions? options = null) 
-        => _inner.newUniqueId(options);
-
-    public DurableObjectId IdFromName(string name) => _inner.idFromName(name);
-    public DurableObjectId IdFromString(string id) => _inner.idFromString(id);
-    public DurableObjectStub Get(DurableObjectId id, DurableObjectGetOptions? options = null) 
-        => _inner.get(id, options);
+    public DurableObjectId NewUniqueId(DurableObjectUniqueidOptions? options = null) => new DurableObjectId();
+    public DurableObjectId IdFromName(string name) => new DurableObjectId();
+    public DurableObjectId IdFromString(string id) => new DurableObjectId();
+    public DurableObjectStub Get(DurableObjectId id, DurableObjectGetOptions? options = null) => new DurableObjectStub();
 }
 
 /// <summary>
@@ -227,17 +145,28 @@ public class DurableObjectNamespace
 /// </summary>
 public class DurableObjectStub
 {
-    private readonly global::DurableObjectStub _inner;
-
-    public DurableObjectStub(global::DurableObjectStub inner)
-    {
-        _inner = inner;
-    }
-
-    public Task<Response> Fetch(RequestInfo init) => _inner.fetch(init);
+    public Task<Response> Fetch(RequestInfo init) => Task.FromResult(new Response());
 }
 
-// Additional types would be defined here...
+// ---- Queue & AI ----
+
+/// <summary>
+/// Queue for asynchronous message processing.
+/// </summary>
+public class WorkerQueue
+{
+    public Task Send(object message) => Task.CompletedTask;
+}
+
+/// <summary>
+/// AI binding for Cloudflare Workers AI.
+/// </summary>
+public class AIBinding
+{
+    public Task<object?> Run(string model, object input) => Task.FromResult<object?>(null);
+}
+
+// ---- Option & Result Records ----
 
 /// <summary>
 /// Request initialization options.
@@ -252,4 +181,83 @@ public record RequestInit(
 
 /// <summary>
 /// Response initialization options.
-/// </response clipped><NOTE>Due to the max output limit, only part of this file has been saved to your workspace. It may be too long and needs to be shortened before being stored completely.</NOTE>
+/// </summary>
+public record ResponseInit(
+    int? Status = null,
+    string? StatusText = null,
+    HeadersInit? Headers = null
+);
+
+/// <summary>
+/// Cloudflare-specific request properties.
+/// </summary>
+public record CfProperties;
+
+/// <summary>
+/// HTTP headers collection.
+/// </summary>
+public class Headers
+{
+    public string? Get(string name) => null;
+    public void Set(string name, string value) { }
+    public void Append(string name, string value) { }
+    public void Delete(string name) { }
+}
+
+/// <summary>
+/// Headers initialization value.
+/// </summary>
+public record HeadersInit;
+
+/// <summary>
+/// Form data collection.
+/// </summary>
+public class FormData
+{
+    public string? Get(string name) => null;
+    public void Append(string name, string value) { }
+}
+
+/// <summary>
+/// Binary large object.
+/// </summary>
+public class Blob
+{
+    public Task<string> Text() => Task.FromResult("");
+    public Task<byte[]> ArrayBuffer() => Task.FromResult(Array.Empty<byte>());
+}
+
+/// <summary>
+/// Request info for fetch calls.
+/// </summary>
+public record RequestInfo(
+    string Url,
+    RequestInit? Init = null
+);
+
+// ---- KV Types ----
+
+public record KVGetOptions(string? CacheTtl = null);
+public record KVPutOptions(int? ExpirationTtl = null);
+public record KVListOptions(string? Prefix = null, int? Limit = null, string? Cursor = null);
+public record KVListResult(IReadOnlyList<string>? Keys = null, bool ListComplete = true, string? Cursor = null);
+
+// ---- R2 Types ----
+
+public record R2Object(string Key = "", long Size = 0, string? Etag = null, long? Uploaded = null);
+public record R2ObjectBody(R2Object Object);
+public record R2GetOptions(string? Range = null);
+public record R2PutOptions(string? ContentType = null);
+public record R2ListOptions(string? Prefix = null, int? Limit = null, string? Cursor = null);
+public record R2Objects(IReadOnlyList<R2Object>? Objects = null, bool Truncated = false, string? Cursor = null);
+
+// ---- D1 Types ----
+
+public record D1Result(IReadOnlyList<IReadOnlyDictionary<string, object?>>? Results = null, bool Success = true, object? Meta = null);
+public record D1ResultAll(IReadOnlyList<IReadOnlyDictionary<string, object?>>? Results = null, bool Success = true);
+
+// ---- Durable Object Types ----
+
+public record DurableObjectId(string Id = "");
+public record DurableObjectUniqueidOptions;
+public record DurableObjectGetOptions;
