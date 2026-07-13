@@ -1,190 +1,282 @@
-# C# Workers Samples
+# Samples - C# to Cloudflare Workers Compiler
 
-This directory contains example Cloudflare Workers written in C#.
+این پوشه شامل نمونه‌های کامل برای کامپایلر C# به Cloudflare Workers است.
 
-## Basic Samples
+## دسته‌بندی نمونه‌ها
+
+### 🟢 نمونه‌های پایه (Basic)
+
+| فایل | توضیحات | ویژگی‌ها |
+|------|---------|----------|
+| `ExampleWorker.cs` | ساده‌ترین Worker | HTTP Handler، Response |
+| `LinqWorker.cs` | عملیات LINQ کامل | Where, Select, OrderBy, GroupBy |
+| `KvStorageWorker.cs` | مدیریت KV Storage | GET, PUT, DELETE, List |
+| `D1DatabaseWorker.cs` | CRUD با D1 Database | Query, Insert, Update, Delete |
+
+### 🟡 نمونه‌های پیشرفته (Advanced)
+
+| فایل | توضیحات | ویژگی‌ها |
+|------|---------|----------|
+| `ReflectionSample.cs` | شبیه‌سازی Reflection | Type inspection, dynamic invocation |
+| `ThreadingSample.cs` | اجرای موازی | Task.Run, ParallelForEach |
+| `UnsafeSample.cs` | کد ناامن شبیه‌سازی شده | Memory allocation, pointer ops |
+| `AdvancedFeaturesSample.cs` | ترکیب ویژگی‌ها | Async, LINQ, Exception handling |
+
+### 🔵 پروژه‌های کامل (Full Projects)
+
+| پوشه | توضیحات | ویژگی‌ها |
+|------|---------|----------|
+| `ECommerce/` | فروشگاه اینترنتی کامل | Products, Cart, Orders, D1, KV |
+
+---
+
+## راه‌اندازی سریع
+
+### 1. کامپایل یک نمونه ساده
+
+```bash
+csw compile Samples/ExampleWorker.cs --output bin/worker.js
+```
+
+### 2. اجرای لوکال
+
+```bash
+wrangler dev bin/worker.js
+```
+
+### 3. دیپلوی
+
+```bash
+csw publish Samples/ExampleWorker.cs
+```
+
+---
+
+## نمونه‌های پایه
 
 ### ExampleWorker.cs
 
-A comprehensive example demonstrating:
+ساده‌ترین Worker ممکن:
 
-- Basic worker structure with routing
-- KV storage for user data
-- D1 database for counters
-- JSON serialization
-- Async/await patterns
-- Records and init-only properties
-- Switch expressions
-- LINQ operations
-
-### LinqWorker.cs
-
-Demonstrates LINQ operations compiled to native JavaScript array methods:
-
-- `Where`, `Select`, `OrderBy`, `ThenBy`
-- `Take`, `Skip`, pagination
-- `GroupBy`, aggregations (`Sum`, `Average`, `Count`)
-- `Any`, `All`, `FirstOrDefault`, `LastOrDefault`
-- `Distinct`, `Union`, `Intersect`, `Except`
-
-### KvStorageWorker.cs
-
-Complete KV storage operations:
-
-- GET, PUT, DELETE key-value pairs
-- List keys with pagination
-- Expiration (TTL) support
-- Error handling
-
-### D1DatabaseWorker.cs
-
-Full CRUD operations with D1 database:
-
-- Parameterized queries (SQL injection prevention)
-- Create, Read, Update, Delete users
-- Transaction-like operations
-- Schema setup instructions
-
-## Advanced Feature Samples
-
-### ReflectionSample.cs
-
-Demonstrates simulated reflection operations:
-
-- Type inspection (name, properties, methods)
-- Get/Set property values by name
-- Invoke methods dynamically
-- Create instances from type names
-
-> **Note:** Reflection is simulated at compile-time with runtime helpers for performance.
-
-### ThreadingSample.cs
-
-Demonstrates parallel execution using Web Workers:
-
-- `Task.Run` for background operations
-- `Task.WhenAll` for parallel execution
-- `ParallelForEach` extension method
-- `ParallelSelect` for parallel transformations
-
-> **Note:** Threading uses JavaScript workers under the hood, not OS threads.
-
-### UnsafeSample.cs
-
-Demonstrates unsafe code simulation using ArrayBuffer:
-
-- Memory allocation and deallocation
-- Pointer-like read/write operations
-- Buffer slicing and concatenation
-- Base64 encoding/decoding
-
-> **Note:** Uses typed arrays to simulate unsafe memory operations safely.
-
-### AdvancedFeaturesSample.cs
-
-Combines multiple advanced features:
-
-- Dynamic dispatch
-- Expression tree analysis
-- P/Invoke-style JavaScript interop
-- AppDomain-like isolation
-
-## Running the Samples
-
-### Prerequisites
-
-1. Install .NET SDK (for compilation)
-2. Install wrangler: `npm install -g wrangler`
-3. Configure Cloudflare account: `wrangler login`
-
-### Compile a Sample
-
-```bash
-# Compile single file
-csw compile Samples/LinqWorker.cs -o ./dist
-
-# Compile with watch mode
-csw watch Samples/KvStorageWorker.cs -o ./dist
-
-# Bundle with runtime
-csw bundle Samples/D1DatabaseWorker.cs -o ./dist --bundle
-```
-
-### Deploy to Cloudflare
-
-1. Initialize wrangler project:
-```bash
-wrangler init my-worker
-cd my-worker
-```
-
-2. Copy compiled output:
-```bash
-cp ../dist/*.js ./src/
-cp ../Compiler.Runtime/Runtime/*.js ./src/
-```
-
-3. Configure `wrangler.toml`:
-```toml
-name = "my-csharp-worker"
-main = "src/worker.js"
-compatibility_date = "2024-01-01"
-
-# Add bindings as needed
-[[kv_namespaces]]
-binding = "MY_KV_NAMESPACE"
-id = "your-kv-namespace-id"
-
-[[d1_databases]]
-binding = "DATABASE"
-database_name = "my-database"
-database_id = "your-database-id"
-```
-
-4. Deploy:
-```bash
-wrangler deploy
-```
-
-### Local Development
-
-```bash
-# Run locally with wrangler
-wrangler dev
-
-# Watch and auto-recompile
-csw watch Samples/ExampleWorker.cs -o ./src &
-wrangler dev
-```
-
-## Sample Output
-
-Each sample returns JSON responses. Example from LinqWorker:
-
-```json
+```csharp
+public class ExampleWorker : Worker
 {
-  "electronics": ["Laptop", "Mouse", "Monitor", "Keyboard"],
-  "productNames": [
-    {"name": "Laptop", "price": 999.99},
-    {"name": "Mouse", "price": 29.99}
-  ],
-  "totalValue": 1558.96,
-  "byCategory": [
-    {"category": "Electronics", "count": 4, "averagePrice": 364.99},
-    {"category": "Furniture", "count": 2, "averagePrice": 174.99}
-  ]
+    public override Task<Response> Fetch(Request request, Env env, ExecutionContext ctx)
+    {
+        return Task.FromResult(new Response("Hello from C#!"));
+    }
 }
 ```
 
-## More Samples Coming Soon
+**خروجی:**
+```javascript
+export default {
+    async fetch(request, env, ctx) {
+        return new Response("Hello from C#!");
+    }
+}
+```
 
-- REST API with JWT authentication
-- WebSocket handler for real-time communication
-- Scheduled worker (cron jobs)
-- Queue processor for background jobs
-- Image transformation with Cloudflare Images
-- AI integration with Workers AI
-- R2 blob storage operations
-- Durable Objects for stateful applications
-- Cache API usage examples
-- Analytics Engine integration
+### LinqWorker.cs
+
+نمایش قدرت LINQ که به متدهای آرایه JavaScript ترجمه می‌شود:
+
+```csharp
+var numbers = new[] { 1, 2, 3, 4, 5 };
+var result = numbers
+    .Where(x => x > 2)
+    .Select(x => x * 2)
+    .OrderBy(x => x)
+    .ToList();
+```
+
+**ترجمه به JavaScript:**
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+const result = numbers
+    .filter(x => x > 2)
+    .map(x => x * 2)
+    .sort((a, b) => a - b);
+```
+
+### KvStorageWorker.cs
+
+کار با Cloudflare KV:
+
+```csharp
+public class KvStorageWorker : Worker
+{
+    public override async Task<Response> Fetch(Request request, Env env, ExecutionContext ctx)
+    {
+        var kv = env.KV_STORE;
+        
+        // ذخیره
+        await kv.Put("key", "value", new KvPutOptions { ExpirationTtl = 3600 });
+        
+        // خواندن
+        var value = await kv.Get<string>("key");
+        
+        // حذف
+        await kv.Delete("key");
+        
+        return new Response($"Value: {value}");
+    }
+}
+```
+
+### D1DatabaseWorker.cs
+
+کار با Cloudflare D1 (SQLite):
+
+```csharp
+public class D1DatabaseWorker : Worker
+{
+    public override async Task<Response> Fetch(Request request, Env env, ExecutionContext ctx)
+    {
+        var db = env.DB;
+        
+        // Insert
+        await db.ExecuteAsync(
+            "INSERT INTO users (name, email) VALUES (?, ?)",
+            "John", "john@example.com");
+        
+        // Select
+        var result = await db.ExecuteAsync(
+            "SELECT * FROM users WHERE id = ?",
+            1);
+        
+        return new Response(JsonSerializer.Serialize(result));
+    }
+}
+```
+
+---
+
+## پروژه کامل: فروشگاه اینترنتی
+
+پوشه `ECommerce/` یک فروشگاه کامل را نشان می‌دهد.
+
+### ساختار
+
+```
+ECommerce/
+├── Program.cs          # کد اصلی Worker
+├── ECommerce.csproj    # فایل پروژه
+├── wrangler.toml       # تنظیمات Cloudflare
+├── schema.sql          # اسکیمای دیتابیس D1
+└── README.md           # مستندات کامل
+```
+
+### API Endpoints
+
+| متد | مسیر | توضیحات |
+|-----|------|---------|
+| GET | `/products` | لیست محصولات |
+| POST | `/cart` | افزودن به سبد |
+| GET | `/cart/{id}` | دریافت سبد |
+| POST | `/checkout` | ثبت سفارش |
+| GET | `/orders/{id}` | دریافت سفارش |
+
+### راه‌اندازی
+
+```bash
+# ایجاد دیتابیس
+wrangler d1 create ecommerce-db
+wrangler d1 execute ecommerce-db --file=Samples/ECommerce/schema.sql
+
+# کامپایل
+csw compile Samples/ECommerce --output bin/worker.js
+
+# اجرای لوکال
+wrangler dev
+
+# دیپلوی
+wrangler deploy
+```
+
+---
+
+## دستورات CLI
+
+```bash
+# کامپایل فایل تکی
+csw compile Samples/ExampleWorker.cs
+
+# کامپایل پروژه
+csw compile Samples/ECommerce/ECommerce.csproj
+
+# Watch mode
+csw watch Samples/ECommerce
+
+# دیپلوی مستقیم
+csw publish Samples/ECommerce
+
+# ایجاد پروژه جدید
+csw new my-worker --template basic
+csw new my-store --template ecommerce
+```
+
+---
+
+## نکات مهم
+
+### ✅ بهترین روش‌ها
+
+1. **استفاده از Record**: برای مدل‌های داده از `record` استفاده کنید
+2. **LINQ بهینه**: LINQ به متدهای native آرایه ترجمه می‌شود
+3. **Async/Await**: تمام عملیات I/O باید async باشد
+4. **Dependency Injection**: سرویس‌ها را در constructor تزریق کنید
+
+### ⚠️ محدودیت‌ها
+
+- Reflection کامل پشتیبانی نمی‌شود
+- Threading واقعی وجود ندارد (فقط async/await)
+- P/Invoke و Unsafe code شبیه‌سازی می‌شوند
+- حداکثر اندازه Bundle: 1MB (فشرده)
+
+### 🚀 بهینه‌سازی
+
+```csharp
+// ❌ بد - ایجاد اشیاء زیاد
+for (int i = 0; i < 1000; i++)
+{
+    var obj = new MyObject();
+}
+
+// ✅ خوب - استفاده از Pooling
+var pool = ObjectPool<MyObject>.Create();
+for (int i = 0; i < 1000; i++)
+{
+    var obj = pool.Get();
+    // use obj
+    pool.Return(obj);
+}
+```
+
+---
+
+## تست نمونه‌ها
+
+```bash
+# تست محصولات
+curl https://your-worker.workers.dev/products
+
+# تست سبد خرید
+curl -X POST https://your-worker.workers.dev/cart \
+  -H "Content-Type: application/json" \
+  -d '{"productId": "prod-1", "quantity": 2}'
+
+# تست checkout
+curl -X POST https://your-worker.workers.dev/checkout \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "cartId": "default-cart"}'
+```
+
+---
+
+## منابع بیشتر
+
+- [مستندات اصلی](../README.md)
+- [معماری کامپایلر](../docs/architecture.md)
+- [نقشه راه](../docs/roadmap.md)
+- [مستندات Cloudflare Workers](https://developers.cloudflare.com/workers/)
