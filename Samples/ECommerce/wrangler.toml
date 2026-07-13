@@ -1,0 +1,55 @@
+# wrangler.toml for E-Commerce Sample
+
+name = "ecommerce-worker"
+main = "bin/worker.js"
+compatibility_date = "2024-01-01"
+
+# Environment Variables
+[vars]
+ENVIRONMENT = "development"
+
+# KV Namespace for Cart Storage
+[[kv_namespaces]]
+binding = "KV_STORE"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-kv-namespace-id"
+
+# D1 Database for Orders and Products
+[[d1_databases]]
+binding = "DB"
+database_name = "ecommerce-db"
+database_id = "your-d1-database-id"
+
+# Queues for Order Processing (Optional)
+[[queues.producers]]
+queue = "order-processing-queue"
+binding = "ORDER_QUEUE"
+
+[[queues.consumers]]
+queue = "order-processing-queue"
+max_batch_size = 10
+max_batch_timeout = 30
+
+# R2 Bucket for Product Images (Optional)
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "product-images"
+
+# AI Binding for Recommendations (Optional)
+[ai]
+binding = "AI"
+
+# Analytics Engine (Optional)
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "ecommerce_events"
+
+# Durable Objects (For distributed cart management in production)
+# [durable_objects]
+# bindings = [
+#   { name = "CART_MANAGER", class_name = "CartManager" }
+# ]
+
+# [migrations]
+# tag = "v1"
+# new_classes = ["CartManager"]

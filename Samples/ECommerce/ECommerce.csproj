@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <CloudflareWorker>true</CloudflareWorker>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cloudflare.Workers.SDK" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wrangler.toml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="schema.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
