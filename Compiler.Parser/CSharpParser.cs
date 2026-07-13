@@ -1,6 +1,9 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using CSharpWorkers.Core;
+using CoreDiagnostic = CSharpWorkers.Core.Diagnostic;
+using CoreCompilationOptions = CSharpWorkers.Core.CompilationOptions;
+using CoreDiagnosticSeverity = CSharpWorkers.Core.DiagnosticSeverity;
+using CoreSourceLocation = CSharpWorkers.Core.SourceLocation;
 
 namespace CSharpWorkers.Parser;
 
@@ -9,9 +12,9 @@ namespace CSharpWorkers.Parser;
 /// </summary>
 public class CSharpParser
 {
-    private readonly CompilationOptions _options;
+    private readonly CoreCompilationOptions _options;
 
-    public CSharpParser(CompilationOptions options)
+    public CSharpParser(CoreCompilationOptions options)
     {
         _options = options;
     }
@@ -83,15 +86,15 @@ public class CSharpParser
         );
     }
 
-    private static IReadOnlyList<Diagnostic> GetDiagnostics(CSharpCompilation compilation)
+    private static IReadOnlyList<Microsoft.CodeAnalysis.Diagnostic> GetDiagnostics(CSharpCompilation compilation)
     {
         return compilation.GetDiagnostics()
             .Where(d => d.Severity == DiagnosticSeverity.Error || d.Severity == DiagnosticSeverity.Warning)
-            .Select(d => new Diagnostic(
-                (DiagnosticSeverity)(int)d.Severity,
+            .Select(d => new CoreDiagnostic(
+                (CoreDiagnosticSeverity)(int)d.Severity,
                 d.Id,
                 d.GetMessage(),
-                d.Location.IsInSource ? new SourceLocation(
+                d.Location.IsInSource ? new CoreSourceLocation(
                     d.Location.SourceTree?.FilePath ?? "<unknown>",
                     d.Location.GetLineSpan().StartLinePosition.Line + 1,
                     d.Location.GetLineSpan().StartLinePosition.Character + 1
@@ -107,6 +110,6 @@ public class CSharpParser
 public record ParsedCompilation(
     SyntaxNode? Root,
     SemanticModel SemanticModel,
-    IReadOnlyList<Diagnostic> Diagnostics,
+    IReadOnlyList<CoreDiagnostic> Diagnostics,
     string FilePath = "<source>"
 );
