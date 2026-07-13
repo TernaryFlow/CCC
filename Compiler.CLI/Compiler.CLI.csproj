@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>12.0</LangVersion>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>csw</ToolCommandName>
+    <PackageId>CSharpWorkers.CLI</PackageId>
+    <PackageVersion>1.0.0-preview</PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Compiler.Parser\Compiler.Parser.csproj" />
+    <ProjectReference Include="..\Compiler.Semantics\Compiler.Semantics.csproj" />
+    <ProjectReference Include="..\Compiler.IR\Compiler.IR.csproj" />
+    <ProjectReference Include="..\Compiler.CodeGen\Compiler.CodeGen.csproj" />
+    <ProjectReference Include="..\Compiler.Runtime\Compiler.Runtime.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+
+</Project>

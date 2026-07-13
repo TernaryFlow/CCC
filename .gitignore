@@ -1,0 +1,47 @@
+```
+# Build results
+**/bin/
+**/obj/
+**/out/
+
+# User-specific files
+.vs/
+.vscode/
+*.userprefs
+
+# IDE - VSCode
+.vscode/*
+
+# Compiled files
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.exe.config
+
+# Packages
+*.nupkg
+*.snupkg
+packages/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment specific files
+.env
+.env.local
+*.env.*
+
+# Test and coverage
+coverage/
+*.coverage
+.htmlcov/
+
+# Temporary files
+*.tmp
+*.temp
+```
