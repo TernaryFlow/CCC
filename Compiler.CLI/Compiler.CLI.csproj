@@ -6,10 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>12.0</LangVersion>
+    
+    <!-- Tool Packaging Settings -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>csw</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    
+    <!-- NuGet Package Metadata -->
     <PackageId>CSharpWorkers.CLI</PackageId>
     <PackageVersion>1.0.0-preview</PackageVersion>
+    <Title>C# to Cloudflare Workers Compiler</Title>
+    <Authors>Your Name</Authors>
+    <Company>Your Company</Company>
+    <Description>A modern open-source compiler that allows developers to execute a subset of C# on Cloudflare Workers without requiring the .NET CLR.</Description>
+    <PackageTags>cloudflare;workers;csharp;compiler;javascript;serverless</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/yourusername/csharp-workers</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yourusername/csharp-workers</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +37,10 @@
 
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
