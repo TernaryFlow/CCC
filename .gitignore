@@ -1,47 +1,32 @@
-```
-# Build results
-**/bin/
-**/obj/
-**/out/
-
-# User-specific files
-.vs/
-.vscode/
-*.userprefs
-
-# IDE - VSCode
-.vscode/*
-
-# Compiled files
+```gitignore
+# Build artifacts
+bin/
+obj/
 *.dll
 *.exe
 *.pdb
-*.mdb
-*.exe.config
-
-# Packages
 *.nupkg
-*.snupkg
-packages/
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Dependencies
+packages/
+node_modules/
+
+# IDE files
+.vs/
+.idea/
+*.userprefs
+*.suo
+*.user
 
 # Logs
 *.log
 
-# Environment specific files
+# Environment
 .env
 .env.local
 *.env.*
 
-# Test and coverage
-coverage/
-*.coverage
-.htmlcov/
-
-# Temporary files
-*.tmp
-*.temp
+# OS generated files
+.DS_Store
+Thumbs.db
 ```

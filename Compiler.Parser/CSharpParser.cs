@@ -106,7 +106,7 @@ public class CSharpParser
 /// </summary>
 public record ParsedCompilation(
     SyntaxNode? Root,
-    object SemanticModel,
+    SemanticModel SemanticModel,
     IReadOnlyList<Diagnostic> Diagnostics,
     string FilePath = "<source>"
 );
